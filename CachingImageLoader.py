@@ -14,18 +14,20 @@ class CachingImageLoader:
     def INPUT_TYPES(s):
         input_dir = folder_paths.get_input_directory()
         files = [f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f))]
-        return {"required":
-                    {"image": (sorted(files), {"image_upload": True})},
-                }
+        return {
+            "required": {
+                "image": ("STRING", {"default": 'enter path to file', "multiline": False}),
+            }
+        }
 
     CATEGORY = "image"
 
     RETURN_TYPES = ("IMAGE", "MASK")
     FUNCTION = "load_image"
 
+    @classmethod
     def load_image(self, image):
-        image_path = folder_paths.get_annotated_filepath(image)
-        img = Image.open(image_path)
+        img = Image.open(image)
         output_images = []
         output_masks = []
         for i in ImageSequence.Iterator(img):
@@ -48,7 +50,7 @@ class CachingImageLoader:
             output_image = output_images[0]
             output_mask = output_masks[0]
 
-        return (output_image, output_mask)
+        return output_image, output_mask
 
     @classmethod
     def IS_CHANGED(s, image):
@@ -56,6 +58,8 @@ class CachingImageLoader:
         m = hashlib.sha256()
         with open(image_path, 'rb') as f:
             m.update(f.read())
+
+        print(f'############### Digest {image} {image_path} {m.digest().hex()}')
         return m.digest().hex()
 
     @classmethod
@@ -68,4 +72,3 @@ class CachingImageLoader:
     @staticmethod
     def status():
         return "OK"
-
