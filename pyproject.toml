@@ -1,0 +1,15 @@
+[project]
+name = "comfyui-ownimage"
+description = "Nodes:Caching Image Loader."
+version = "1.0.0"
+license = "LICENSE"
+dependencies = ["torch", "safetensors>=0.3.0", "Pillow"]
+
+[project.urls]
+Repository = "https://github.com/ownimage/ComfyUI-ownimage"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI-ownimage"
+Icon = ""
